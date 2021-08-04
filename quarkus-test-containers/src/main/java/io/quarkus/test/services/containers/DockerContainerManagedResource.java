@@ -66,6 +66,9 @@ public abstract class DockerContainerManagedResource implements ManagedResource 
 
     @Override
     public String getHost(Protocol protocol) {
+        if (Protocol.NONE == protocol) {
+            return innerContainer.getHost();
+        }
         return protocol.getValue() + "://" + innerContainer.getHost();
     }
 

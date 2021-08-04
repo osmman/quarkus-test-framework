@@ -63,6 +63,9 @@ public class OpenShiftContainerManagedResource implements ManagedResource {
     @Override
     public String getHost(Protocol protocol) {
         if (useInternalServiceAsUrl()) {
+            if (Protocol.NONE == protocol) {
+                return getInternalServiceName();
+            }
             return protocol.getValue() + "://" + getInternalServiceName();
         }
 
@@ -97,6 +100,9 @@ public class OpenShiftContainerManagedResource implements ManagedResource {
     protected void exposeService() {
         if (!useInternalServiceAsUrl()) {
             client.expose(model.getContext().getOwner(), model.getPort());
+        } else {
+            client.getClient().services().withName(model.getContext().getOwner().getName())
+                    .portForward(model.getPort(), model.getPort());
         }
     }
 

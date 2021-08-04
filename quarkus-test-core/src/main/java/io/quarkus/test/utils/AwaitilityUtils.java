@@ -110,9 +110,12 @@ public final class AwaitilityUtils {
 
     private static ConditionFactory awaits(AwaitilitySettings settings) {
         ConditionFactory factory = Awaitility.await()
-                .ignoreExceptions()
                 .pollInterval(settings.interval.toSeconds(), TimeUnit.SECONDS)
                 .atMost(timeoutInSeconds(settings), TimeUnit.SECONDS);
+
+        if (settings.ignoreExceptions) {
+            factory.ignoreExceptions();
+        }
 
         if (settings.service != null || StringUtils.isNotEmpty(settings.timeoutMessage)) {
             // Enable logging
@@ -169,6 +172,7 @@ public final class AwaitilityUtils {
         Duration timeout = Duration.ofSeconds(TIMEOUT_SECONDS);
         Service service;
         String timeoutMessage = StringUtils.EMPTY;
+        boolean ignoreExceptions = true;
 
         public AwaitilitySettings withService(Service service) {
             this.service = service;
@@ -177,6 +181,11 @@ public final class AwaitilityUtils {
 
         public AwaitilitySettings timeoutMessage(String message, Object... args) {
             this.timeoutMessage = String.format(message, args);
+            return this;
+        }
+
+        public AwaitilitySettings ignoreExceptions(boolean ignore) {
+            this.ignoreExceptions = ignore;
             return this;
         }
 

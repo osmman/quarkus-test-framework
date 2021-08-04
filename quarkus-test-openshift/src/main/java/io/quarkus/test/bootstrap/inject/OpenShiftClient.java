@@ -91,6 +91,10 @@ public final class OpenShiftClient {
         kn = client.adapt(KnativeClient.class);
     }
 
+    public NamespacedOpenShiftClient getClient() {
+        return client;
+    }
+
     public static OpenShiftClient create() {
         return new OpenShiftClient();
     }

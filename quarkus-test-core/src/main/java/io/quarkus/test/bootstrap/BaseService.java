@@ -210,6 +210,7 @@ public class BaseService<T extends Service> implements Service {
         untilIsTrue(this::isRunning, AwaitilitySettings
                 .using(startupCheckInterval, startupTimeout)
                 .withService(this)
-                .timeoutMessage("Service didn't start in %s minutes", startupTimeout));
+                .timeoutMessage("Service didn't start in %s minutes", startupTimeout)
+                .ignoreExceptions(false));
     }
 }
